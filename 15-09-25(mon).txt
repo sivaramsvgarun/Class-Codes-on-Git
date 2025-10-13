@@ -1,0 +1,114 @@
+i started as a python developer .i used to do ad hoc data activities with respect to python and pandas and using smtp we will be sending the mail to the stakeholders
+
+------
+import pandas as pd
+from shareplum import Site
+from shareplum import Office365
+from io import BytesIO
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
+
+# 1. Connect to SharePoint
+authcookie = Office365('https://company.sharepoint.com',
+                       username='user@company.com',
+                       password='password').GetCookies()
+site = Site('https://company.sharepoint.com/sites/Reports', authcookie=authcookie)
+folder = site.Folder('Shared Documents/DailyReports')
+
+# Download latest file
+file = folder.get_file('transactions.csv')
+
+# 2. Load into Pandas
+df = pd.read_csv(BytesIO(file))
+
+# 3. Clean & aggregate
+df['date'] = pd.to_datetime(df['date'])
+summary = df.groupby(['region','product']).agg({'sales':'sum'}).reset_index()
+
+# 4. Save report
+report_file = "daily_sales_summary.xlsx"
+summary.to_excel(report_file, index=False)
+
+# 5. Send Email
+msg = MIMEMultipart()
+msg['From'] = "reports@company.com"
+msg['To'] = "stakeholders@company.com"
+msg['Subject'] = "Daily Sales Summary"
+
+part = MIMEBase('application', "octet-stream")
+with open(report_file, 'rb') as file:
+    part.set_payload(file.read())
+encoders.encode_base64(part)
+part.add_header('Content-Disposition', f'attachment; filename={report_file}')
+msg.attach(part)
+
+with smtplib.SMTP('smtp.office365.com', 587) as server:
+    server.starttls()
+    server.login("reports@company.com", "password")
+    server.send_message(msg)
+-----------------------------------------------------
+
+"One ad-hoc activity I automated was extracting CSV reports from SharePoint, cleaning and transforming them with Pandas, and emailing the summarized report to stakeholders.
+ This reduced manual effort, ensured accuracy, and delivered insights on time every morning.
+ 
+ ---------------------------------------------------
+ 
+ we are completing in normal pycharm environment and moving our code to the git hub ,our tl will evaluate ,once it is okay ,it will be automate in linux environment
+ 
+ -------
+ as a python developer we have been asked to connect the mongo db and update the collection with respect to the csv upload 
+ 
+ spark-submit filename.py
+ 
+ Spark jobs can be submitted in different modes.
+
+Local mode runs everything on one machine (good for testing).
+
+Standalone cluster mode uses Spark’s own cluster manager.
+
+YARN or Kubernetes mode uses external resource managers, where we can choose client or cluster deployment depending on whether the driver runs locally or inside the cluster."
+
+-----
+how will you schedule your job using databricks
+
+extraction of data using api
+
+general interview qn
+
+sql order of execution
+slowly changing dimension 
+normalization
+snowflake schema vs star schema
+sql optimization
+second highest salary with respect to the dept
+how to find manager name of the employee in employee table
+where vs having
+cte vs subquery
+joins
+acid properties
+windowing function
+
+SELECT 
+    EXTRACT(YEAR FROM dateofjoining) AS join_year,
+    CASE 
+        WHEN EXTRACT(MONTH FROM dateofjoining) IN (3,5) 
+            THEN 'Mar-May'
+        ELSE 'Other Months'
+    END AS period,
+    COUNT(*) AS total_joins,
+    ROUND(
+        (COUNT(*) * 100.0) / 
+        (COUNT(*) OVER (PARTITION BY EXTRACT(YEAR FROM dateofjoining))),
+        2
+    ) AS percentage
+FROM employee
+GROUP BY 
+    EXTRACT(YEAR FROM dateofjoining),
+    CASE 
+        WHEN EXTRACT(MONTH FROM dateofjoining) IN (3,5) 
+            THEN 'Mar-May'
+        ELSE 'Other Months'
+    END
+ORDER BY join_year, period;
