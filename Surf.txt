@@ -1,0 +1,10 @@
+For efficient writing we should go for partitioning and bucketing
+====Surf in Snowflake====
+Stages 
+pipes
+tasks
+external table 
+managed table
+===Explore on incremental append, overwrite, insert
+===File format - Parquet, csv, json, orc , avro, rc
+===File compression logic - snappy, gzip

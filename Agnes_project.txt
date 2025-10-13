@@ -1,0 +1,146 @@
+1) Author Submissions - s3 bucket 
+Apache Spark or Databricks for distributed parsing and transformation.
+Apache Tika or PDFMiner to extract metadata and text from PDFs.
+Store raw files in Bronze layer, parsed metadata in Silver.
+
+2. ReaderActivity Logs - need more info
+We will given APIS with respect to the reader session such that reader information like
+Reader user id 
+Page views: Which pages or chapters were opened
+Scroll depth: How far a user read
+Time spent: Duration on each page or section
+Clicks: On links, buttons, or interactive elements
+Device info: Browser, OS, screen size
+Session metadata: User ID, timestamp, location, session duration 
+Once retrieved, logs go through:
+Validation: Check schema, required fields
+Normalization: Standardize timestamps, user IDs
+Sessionization: Group events into user sessions
+Enrichment: Add metadata (e.g., book title, genre)
+Aggregation: Metrics like time spent per book, bounce rate
+
+
+3) Sales Transactions - sql table
+transactions
+books
+users
+authors
+payments
+SQL QUERY 
+--------------------
+SELECT
+    t.transaction_id,
+    t.purchase_timestamp,
+    t.price,
+    t.payment_method,
+    b.book_id,
+    b.title AS book_title,
+    b.genre,
+    b.isbn,
+    a.author_id,
+    a.name AS author_name,
+    u.user_id,
+    u.name AS user_name,
+    u.location
+FROM
+    transactions t
+JOIN
+    books b ON t.book_id = b.book_id
+JOIN
+    authors a ON b.author_id = a.author_id
+JOIN
+    users u ON t.user_id = u.user_id
+ORDER BY
+    t.purchase_timestamp DESC;
+
+
+ables to create a rich view of each sale—including who bought what, when, and by whom it was written:
+
+-------------------------------------------------
+Price, discount, payment method
+. Discounts and Payment Status (SQL Extension)
+
+SELECT
+    t.transaction_id,
+    t.price,
+    d.discount_code,
+    d.discount_value,
+    p.status AS payment_status,
+    p.gateway,
+    p.currency
+FROM
+    transactions t
+LEFT JOIN
+    payments p ON t.transaction_id = p.transaction_id
+LEFT JOIN
+    discounts d ON t.transaction_id = d.transaction_id;
+This gives you a richer view of each sale, including whether it was successful, refunded, or discounted.
+
+REview data is in mongoidb
+{
+  "review_id": "r123",
+  "book_id": "b456",
+  "user_id": "u789",
+  "rating": 4,
+  "review_text": "Loved the pacing and characters!",
+  "timestamp": "2025-09-01T14:22:00Z"
+}
+_--------------
+
+SELECT
+    t.transaction_id,
+    t.book_id,
+    b.title,
+    u.name AS user_name,
+    r.rating,
+    r.review_text
+FROM
+    transactions t
+JOIN
+    books b ON t.book_id = b.book_id
+JOIN
+    users u ON t.user_id = u.user_id
+LEFT JOIN
+    book_reviews r ON t.book_id = r.book_id AND t.user_id = r.user_id;
+
+This lets you correlate purchases with user feedback, enabling insights like:
+Which books sell well but get poor reviews
+Which authors consistently receive high ratings
+How discounts affect user satisfaction
+
+
+
+
+These fields can be added by joining the transactions table with a payments or discounts table.
+Example Tables:
+transactions: Contains basic purchase info
+
+payments: Tracks payment status, gateway, currency
+
+discounts: Maps discount codes to values or campaigns
+
+4) ratings & reviews - Mongodb
+
+
+
+
+Gold layer 
+Top-read books by genre
+Average reading time per user
+Drop-off analysis (where readers stop)
+
+
+
+
+
+Snowflake write ( multitenant data warehouse)
+S3 - datalake --
+
+standard - life cycle policy (has been set to 7 days) - for populating the data to the dashboard
+
+Deep archive(suddenly u can retrive the data)
+12-48 hrs (configurable)
+
+
+working for the data scientists (sagemaker) and the visualization team(Tableau/quciksight)
+

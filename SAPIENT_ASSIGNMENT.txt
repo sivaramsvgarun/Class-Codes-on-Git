@@ -1,0 +1,57 @@
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+spark = SparkSession.builder.appName("PeakHourAnalysis").getOrCreate()
+logpath=r'C:\Users\rjram\Downloads\telecom_data\telecom_data\call_logs.csv'
+locationpath=r'C:\Users\rjram\Downloads\telecom_data\telecom_data\location_dim.csv'
+call_logs = spark.read.csv(logpath, header=True, inferSchema=True)
+location_dim = spark.read.csv(locationpath, header=True, inferSchema=True)
+call_logs = call_logs.withColumn('hour_of_day', F.hour(F.col('hour')))
+hourly_traffic = call_logs.groupBy('hour_of_day').agg(F.count('hour_of_day').alias('call_count'))
+peak_hour_info = hourly_traffic.orderBy(F.desc('call_count')).first()
+peak_hour = peak_hour_info['hour_of_day']
+print(f"The peak hour of the day with maximum call traffic is: {peak_hour}")
+
+######Top Five states##
+print('Top Five states are mentioned below')
+joined_data = call_logs.join(location_dim, 'postal_code')
+average_country_speed = joined_data.agg(F.avg('speed').alias('average_speed')).collect()[0]['average_speed']
+filtered_data = joined_data.filter(F.col('speed') < average_country_speed)
+state_avg_speed = filtered_data.groupBy('state_name').agg(F.avg('speed').alias('avg_speed'))
+top_states = state_avg_speed.orderBy('avg_speed').limit(5)
+top_states.show()
+################state has maximum Emergency state of network##########
+joined_data = call_logs.join(location_dim, 'postal_code')
+emergency_states = joined_data.filter(F.col('description') == 'STATE_EMERGENCY_ONLY')
+state_emergency_counts = emergency_states.groupBy('state_name').agg(F.count('description').alias('emergency_count'))
+max_emergency_state = state_emergency_counts.orderBy(F.desc('emergency_count')).first()
+state_with_max_emergency = max_emergency_state['state_name']
+emergency_count = max_emergency_state['emergency_count']
+print(f"The state with the maximum number of emergency states is {state_with_max_emergency} with {emergency_count} occurrences.")
+
+print("speed for each activity like IN_VEHICLE")
+###4.	What is the relation between user activity with the Speed (Calculate avg speed for each activity like IN_VEHICLE)
+activity_avg_speed = call_logs.groupBy('activity').agg(F.avg('speed').alias('avg_speed'))
+activity_avg_speed.show()
+
+#######################5.	Which state has maximum call volume density (number of calls/area)?
+state_call_density = joined_data.groupBy('state_name').agg(
+    F.count('hour').alias('call_volume'),
+    F.avg('density').alias('average_density')
+)
+state_call_density = state_call_density.withColumn(
+    'call_density', F.col('call_volume') / F.col('average_density')
+)
+max_call_density_state = state_call_density.orderBy(F.desc('call_density')).first()
+state_with_max_call_density = max_call_density_state['state_name']
+call_density_value = max_call_density_state['call_density']
+print(f"The state with the maximum call volume density is {state_with_max_call_density} with a density of {call_density_value} calls per unit area.")
+#### filter out bad records
+print('filtering bad records logic is mentioned below####################')
+bad_records_condition = (F.col('speed').isNull()) | (F.col('speed') < 0)
+good_records_condition = ~bad_records_condition
+bad_records = call_logs.filter(bad_records_condition)
+good_records = call_logs.filter(good_records_condition)
+print("Bad Records:")
+bad_records.show()
+print("Good Records:")
+good_records.show()

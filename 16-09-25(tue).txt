@@ -1,0 +1,42 @@
+python
+list set tuple  dict
+generator vs decorator
+function and class
+garbage collector
+memory management in python
+deep copy and shallow copy
+
+programs 
+reversing the string
+comparison between two list
+fibonacci series
+palindrome
+find the repitive occurence of a char in a particular string
+find the missing number in a array
+how will you remove duplicates inside list
+
+pyspark
+
+spark architecture
+spark optimization
+lit()
+coalesce vs coalesce in sql
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import sum
+
+# Create Spark session
+spark = SparkSession.builder.appName("TransposeExample").getOrCreate()
+
+# Sample data
+data = [("A", "Math", 85),
+        ("A", "Science", 90),
+        ("B", "Math", 75),
+        ("B", "Science", 80)]
+columns = ["student", "subject", "marks"]
+
+df = spark.createDataFrame(data, columns)
+
+# Pivot subject to columns
+df_pivot = df.groupBy("student").pivot("subject").agg(sum("marks"))
+df_pivot.show()
