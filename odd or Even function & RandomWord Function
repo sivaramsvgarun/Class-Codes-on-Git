@@ -1,0 +1,119 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "def check_odd_even():\n",
+        "  num=int(input('Enter a Value:'))\n",
+        "  if num%2==0:\n",
+        "    print(f'{num} is an Even Number')\n",
+        "  else:\n",
+        "    print(f'{num} is an Odd Number')\n",
+        "check_odd_even()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-nck-FcuSIBN",
+        "outputId": "3c997475-cb32-46c6-e745-03223584e3c0"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter a Value:15\n",
+            "15 is an Odd Number\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from wonderwords import RandomWord\n",
+        "\n",
+        "r=RandomWord()\n",
+        "ran_word=r.word()\n",
+        "# def rev_word(word):\n",
+        "#     reversed_word=word[::-1]\n",
+        "#     return reversed_word\n",
+        "# print('Random Word:', ran_word)\n",
+        "# print('Reversed:', rev_word(ran_word))\n",
+        "\n",
+        "def rev_word(word):\n",
+        "  reve_word=word[::-1]\n",
+        "  return reve_word\n",
+        "print(ran_word)\n",
+        "print(rev_word(ran_word))"
+      ],
+      "metadata": {
+        "collapsed": true,
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "IaeLOiqTTnIu",
+        "outputId": "55f1fc0d-af5c-434d-a8a4-f0796cb63faf"
+      },
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "vine\n",
+            "eniv\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ran_word=Sivaramapandian\n",
+        "\n",
+        "def rev_word():\n",
+        "    reversed_word=ran_word[::-1]\n",
+        "    return reversed_word\n",
+        "print(rev_word())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 211
+        },
+        "id": "EsfjZ82EfBBX",
+        "outputId": "3b46a574-b1da-44bf-87b6-d43b060b1391"
+      },
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "NameError",
+          "evalue": "name 'Sivaramapandian' is not defined",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m/tmp/ipython-input-3492276264.py\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mran_word\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mSivaramapandian\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0;32mdef\u001b[0m \u001b[0mrev_word\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m     \u001b[0mreversed_word\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mran_word\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m     \u001b[0;32mreturn\u001b[0m \u001b[0mreversed_word\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mNameError\u001b[0m: name 'Sivaramapandian' is not defined"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "accelerator": "GPU",
+    "colab": {
+      "name": "l01c01_introduction_to_colab_and_python.ipynb",
+      "provenance": []
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
